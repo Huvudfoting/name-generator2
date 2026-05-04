@@ -1,0 +1,21 @@
+# Prompt 1
+
+Make two javascript arrays, one containing nouns and the other verbs or adjectives.
+
+The purpose is to use the arrays to combine random values in the form  one verb or adjective or other descriptiv word and one noun.  for example "Awsome Harvest", "Gold Brick" or  "Metallic Lock". All words should be short and easy to pronounce, the first letter should be capitalized.
+
+The lists should each contain 500 words.
+
+Each word in the array should be printed on a separate row.
+
+# Prompt 2
+
+Make an UI in a single HTML file with gaudy, colorful styling and a proud title that says "Evas awsome name generator 2". 
+There should be a single round read button that says "Generate!".
+Pressing the button should generate a numbered list of 5 combinations.
+
+# A few prompts specifying no embedded fonts or liks to remote resources, as well as savinfg som vertical space.
+
+# Propt 3
+
+Can you try to change just the words in the arrays in the style of a teenager making up NATO operation names. For example outputs could be "Flaming Eagle", "Steel Gear", "Ninja Bicycle", "Exploding Star" or "Radical Dude".

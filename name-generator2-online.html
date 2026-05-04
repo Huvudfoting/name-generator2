@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eva's Awesome Name Generator 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Fredoka+One&family=Lilita+One&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: #0d0d1a;
+    font-family: 'Fredoka One', cursive;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Animated rainbow background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, #ff006688 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 10%, #7c3aed88 0%, transparent 50%),
+      radial-gradient(ellipse at 60% 80%, #0891b288 0%, transparent 50%),
+      radial-gradient(ellipse at 10% 70%, #16a34a88 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 60%, #ea580c88 0%, transparent 50%);
+    animation: bgShift 8s ease-in-out infinite alternate;
+    z-index: 0;
+  }
+
+  @keyframes bgShift {
+    0%   { opacity: 1; transform: scale(1) rotate(0deg); }
+    100% { opacity: 0.7; transform: scale(1.1) rotate(3deg); }
+  }
+
+  /* Floating stars */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    from { opacity: 0.2; transform: scale(0.8); }
+    to   { opacity: 1;   transform: scale(1.4); }
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 24px 60px;
+    min-height: 100vh;
+  }
+
+  /* Title */
+  .title-wrap {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .title {
+    font-family: 'Lilita One', cursive;
+    font-size: clamp(2.4rem, 7vw, 5rem);
+    line-height: 1.1;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #ff0080, #ff8c00, #ffe100, #00e676, #00b0ff, #e040fb, #ff0080);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: rainbowText 4s linear infinite;
+    filter: drop-shadow(0 0 20px #ff008099);
+  }
+
+  @keyframes rainbowText {
+    0%   { background-position: 0% center; }
+    100% { background-position: 300% center; }
+  }
+
+  .title-sub {
+    font-family: 'Boogaloo', cursive;
+    font-size: 1.1rem;
+    color: #ffd700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-top: 6px;
+    text-shadow: 0 0 12px #ffd700aa;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  /* Decorative zigzag divider */
+  .divider {
+    width: 100%;
+    max-width: 500px;
+    height: 20px;
+    margin: 0 auto 40px;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        #ff0080 0px, #ff0080 12px,
+        #ff8c00 12px, #ff8c00 24px,
+        #ffe100 24px, #ffe100 36px,
+        #00e676 36px, #00e676 48px,
+        #00b0ff 48px, #00b0ff 60px,
+        #e040fb 60px, #e040fb 72px
+      );
+    clip-path: polygon(0 100%, 12px 0, 24px 100%, 36px 0, 48px 100%, 60px 0, 72px 100%, 84px 0, 96px 100%, 108px 0, 120px 100%, 132px 0, 144px 100%, 156px 0, 168px 100%, 180px 0, 192px 100%, 204px 0, 216px 100%, 228px 0, 240px 100%, 252px 0, 264px 100%, 276px 0, 288px 100%, 300px 0, 312px 100%, 324px 0, 336px 100%, 348px 0, 360px 100%, 372px 0, 384px 100%, 396px 0, 408px 100%, 420px 0, 432px 100%, 444px 0, 456px 100%, 468px 0, 480px 100%, 492px 0, 500px 100%, 500px 100%, 0 100%);
+    animation: slideColors 2s linear infinite;
+  }
+
+  @keyframes slideColors {
+    from { background-position: 0 0; }
+    to   { background-position: 72px 0; }
+  }
+
+  /* Big round button */
+  .btn-wrap {
+    margin-bottom: 44px;
+    position: relative;
+  }
+
+  .generate-btn {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-family: 'Lilita One', cursive;
+    font-size: 1.55rem;
+    color: #fff;
+    background: conic-gradient(from 0deg, #ff0080, #ff8c00, #ffe100, #00e676, #00b0ff, #e040fb, #ff0080);
+    box-shadow:
+      0 0 0 6px #0d0d1a,
+      0 0 0 10px #ff0080,
+      0 0 40px #ff008099,
+      0 0 80px #7c3aed55;
+    text-shadow: 0 2px 6px #00000099;
+    transition: transform 0.1s, box-shadow 0.1s;
+    animation: spinBorder 4s linear infinite;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 1px;
+  }
+
+  .generate-btn::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #cc0066, #660033);
+    z-index: 0;
+  }
+
+  .generate-btn span {
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes spinBorder {
+    from { filter: hue-rotate(0deg); }
+    to   { filter: hue-rotate(360deg); }
+  }
+
+  .generate-btn:hover {
+    transform: scale(1.08);
+    box-shadow:
+      0 0 0 6px #0d0d1a,
+      0 0 0 10px #ff8c00,
+      0 0 60px #ff8c0099,
+      0 0 120px #7c3aed88;
+  }
+
+  .generate-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* Results */
+  .results {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .result-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 22px;
+    border-radius: 18px;
+    border: 3px solid transparent;
+    background: #0d0d1a;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+    transition: transform 0.15s, box-shadow 0.3s;
+  }
+
+  .result-item.show {
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.9); }
+    to   { opacity: 1; transform: translateY(0)   scale(1); }
+  }
+
+  .result-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--row-bg);
+    opacity: 0.12;
+  }
+
+  .result-item:nth-child(1) { --row-bg: linear-gradient(90deg, #ff0080, #ff8c00); border-image: linear-gradient(90deg, #ff0080, #ff8c00) 1; }
+  .result-item:nth-child(2) { --row-bg: linear-gradient(90deg, #ffe100, #00e676); border-image: linear-gradient(90deg, #ffe100, #00e676) 1; }
+  .result-item:nth-child(3) { --row-bg: linear-gradient(90deg, #00b0ff, #e040fb); border-image: linear-gradient(90deg, #00b0ff, #e040fb) 1; }
+  .result-item:nth-child(4) { --row-bg: linear-gradient(90deg, #ff4500, #ff0080); border-image: linear-gradient(90deg, #ff4500, #ff0080) 1; }
+  .result-item:nth-child(5) { --row-bg: linear-gradient(90deg, #00e676, #00b0ff); border-image: linear-gradient(90deg, #00e676, #00b0ff) 1; }
+
+  .result-num {
+    font-family: 'Lilita One', cursive;
+    font-size: 1.8rem;
+    min-width: 36px;
+    line-height: 1;
+  }
+
+  .result-item:nth-child(1) .result-num { color: #ff4da6; text-shadow: 0 0 10px #ff006688; }
+  .result-item:nth-child(2) .result-num { color: #ffe100; text-shadow: 0 0 10px #ffe10088; }
+  .result-item:nth-child(3) .result-num { color: #40c4ff; text-shadow: 0 0 10px #00b0ff88; }
+  .result-item:nth-child(4) .result-num { color: #ff6e40; text-shadow: 0 0 10px #ff450088; }
+  .result-item:nth-child(5) .result-num { color: #69ff47; text-shadow: 0 0 10px #00e67688; }
+
+  .result-name {
+    font-family: 'Lilita One', cursive;
+    font-size: 1.5rem;
+    color: #fff;
+    text-shadow: 0 2px 8px #00000088;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.5px;
+  }
+
+  .placeholder {
+    text-align: center;
+    color: #ffffff44;
+    font-family: 'Boogaloo', cursive;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    padding: 30px 0;
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="page">
+  <div class="title-wrap">
+    <div class="title">Eva's Awesome<br>Name Generator 2</div>
+    <div class="title-sub">✨ Magical Edition ✨</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="btn-wrap">
+    <button class="generate-btn" onclick="generate()">
+      <span>Generate!</span>
+    </button>
+  </div>
+
+  <div class="results" id="results">
+    <div class="placeholder" id="placeholder">👆 Press the button to begin! 👆</div>
+  </div>
+</div>
+
+<script>
+const nouns = [
+  "Anchor","Apple","Arc","Arm","Arrow","Ash","Axe","Badge","Bank","Bark","Barn","Base","Basin","Beam","Bear","Bell","Bench","Berry","Bird","Blade","Block","Bloom","Bone","Book","Bow","Bowl","Box","Branch","Brick","Bridge","Brook","Bush","Cap","Card","Cart","Cave","Chain","Chart","Chest","Chip","Claw","Clay","Cliff","Clock","Cloud","Club","Coal","Coast","Coil","Coin","Colt","Core","Cork","Corn","Crab","Crane","Creek","Crest","Crop","Cross","Crown","Cube","Cup","Curl","Dart","Dawn","Deck","Deer","Den","Desk","Dew","Disc","Ditch","Dock","Door","Draft","Drake","Drum","Dune","Dust","Eagle","Edge","Elm","Ember","Eye","Farm","Fern","Field","Fin","Fire","Fish","Flag","Flame","Flint","Flood","Floor","Flow","Foam","Fog","Ford","Fork","Frost","Fur","Gate","Gear","Gem","Glen","Globe","Glove","Gold","Grain","Grass","Grid","Grip","Grove","Guard","Gulf","Hand","Hare","Harp","Hawk","Hay","Heart","Helm","Hill","Hive","Hog","Hook","Horn","Hull","Hunt","Hut","Ice","Ink","Isle","Ivy","Jade","Jaw","Jet","Jug","Kelp","Key","Kite","Knot","Lamp","Lance","Leaf","Ledge","Link","Lion","Log","Loop","Lore","Lure","Lynx","Mane","Map","Mast","Maze","Mead","Mesh","Mill","Mist","Moat","Mole","Moon","Moss","Moth","Mound","Mouse","Mud","Nest","Net","Node","Notch","Oar","Oak","Orb","Owl","Ox","Pack","Palm","Path","Peak","Pearl","Peat","Peg","Pen","Pine","Pit","Plain","Plank","Plot","Plow","Plug","Pod","Pond","Pool","Port","Post","Pot","Probe","Prong","Prow","Quay","Rail","Ram","Range","Reef","Reed","Ridge","Ring","Rink","Rise","Road","Rock","Rod","Root","Rope","Rose","Rune","Rush","Sail","Salt","Sand","Scale","Seal","Seed","Shelf","Shell","Shield","Shore","Slab","Slag","Slate","Slope","Smoke","Snare","Snow","Soil","Spark","Spike","Spine","Spire","Split","Spoke","Spring","Sprout","Stack","Staff","Stag","Stake","Stand","Star","Stem","Step","Stone","Storm","Straw","Stream","Strip","Stump","Surf","Swamp","Swan","Sword","Thorn","Tide","Tile","Tip","Toad","Torch","Tower","Track","Trail","Trap","Tree","Twig","Vault","Vein","Vine","Wake","Wall","Wand","Wave","Wax","Weed","Well","Wheel","Wind","Wing","Wire","Wolf","Wood","Wren","Yew","Zone","Bale","Belt","Boulder","Brace","Braid","Brass","Briar","Brine","Buoy","Burrow","Cairn","Canoe","Cape","Chalk","Chasm","Cinder","Clamp","Clasp","Cleft","Clover","Cobble","Comet","Crag","Dome","Draw","Dredge","Drift","Eddy","Fang","Fault","Fjord","Flare","Flock","Fluke","Fold","Frond","Gale","Gash","Gorge","Graft","Grotto","Gust","Haze","Hearth","Hedge","Hilt","Hollow","Hub","Husk","Ingot","Islet","Jolt","Keel","Knob","Knoll","Latch","Lava","Lens","Loch","Lode","Loft","Marsh","Mesa","Mire","Mote","Nave","Nook","Opal","Patch","Pelt","Pillar","Pivot","Plume","Point","Prism","Pulp","Quarry","Quill","Ramp","Ravine","Rind","Rime","Rivet","Rook","Rubble","Ruin","Runnel","Shard","Shingle","Shovel","Sill","Sinew","Slick","Slough","Slug","Snag","Snarl","Spall","Span","Spit","Spur","Squall","Stave","Stead","Stir","Strand","Strap","Strut","Stud","Sump","Surge","Sward","Thatch","Thicket","Threshold","Timber","Tine","Toll","Tract","Trench","Trunk","Tuft","Turf","Twist","Vale","Vane","Verge","Vessel","Visor","Weld","Whirl","Whorl","Wisp","Wort","Yoke"
+];
+
+const descriptors = [
+  "Aged","Agile","Airy","Alert","Amber","Ancient","Ashen","Astute","Azure","Bare","Bitter","Black","Bleak","Blunt","Bold","Brave","Brisk","Bronze","Brown","Calm","Carved","Clean","Clear","Clever","Cold","Common","Cool","Copper","Coral","Coarse","Crisp","Crude","Curved","Dark","Dead","Deep","Dense","Dry","Dull","Dusky","Dusty","Eager","Early","Even","Fast","Faint","Fair","Fell","Fierce","Fine","Firm","Fixed","Flat","Fleet","Fond","Free","Fresh","Frozen","Gaunt","Grim","Grand","Gray","Green","Gross","Hard","Hardy","Harsh","Heavy","High","Hollow","Holy","Huge","Icy","Iron","Jade","Just","Keen","Known","Large","Late","Lean","Light","Lithe","Local","Long","Lost","Loud","Low","Lush","Mellow","Mild","Murky","Neat","Noble","Odd","Old","Open","Pale","Plain","Pure","Quick","Quiet","Rare","Raw","Rich","Rigid","Round","Royal","Rough","Rusty","Sharp","Short","Shy","Silent","Slim","Slow","Small","Smart","Smooth","Sober","Soft","Solid","Spare","Still","Stout","Stoic","Strong","Stiff","Swift","Tall","Tame","Thick","Thin","Tight","True","Vast","Warm","Wavy","Wide","Wild","Wise","Worn","Young","Adept","Aloft","Ample","Arid","Baked","Banded","Barren","Bent","Bland","Bowed","Braided","Bright","Broken","Buried","Burnt","Chilled","Chipped","Chunky","Cleft","Clouded","Coiled","Cracked","Cragged","Crimped","Crooked","Crushed","Dried","Drifted","Driven","Edged","Etched","Fallen","Famed","Forged","Frail","Fused","Gilt","Glassy","Gilded","Gloomy","Gnarly","Gold","Gouged","Grainy","Grave","Grayed","Ground","Guarded","Gutted","Hacked","Halved","Hazy","Heaped","Hidden","Honed","Hooked","Hulled","Jagged","Jutting","Kinked","Knotted","Laced","Lashed","Lathed","Layered","Leached","Leafy","Leaden","Linked","Lofted","Looped","Lurid","Matte","Melted","Misted","Mixed","Molded","Mossy","Muted","Narrow","Notched","Oaken","Onyx","Paled","Patched","Paved","Peaked","Pewter","Pierced","Pitted","Plated","Polar","Polished","Pooled","Porous","Rimmed","Ringed","Rubbed","Runed","Rusted","Riven","Salted","Scored","Sealed","Shaded","Shallow","Shaved","Sheared","Silver","Simple","Singed","Slanted","Slick","Slung","Smoked","Soaked","Spanned","Sparse","Spliced","Split","Stacked","Stamped","Stark","Steeped","Steep","Streaked","Stripped","Studded","Sunken","Swept","Swirled","Tapered","Tempered","Tested","Thorned","Tilted","Tinned","Tipped","Traced","Trimmed","Twisted","Veined","Warped","Washed","Waxed","Wedged","Welded","Whittled","Wired","Woven","Wrapped","Ashy","Bolted","Bonded","Boxed","Braced","Broad","Carved","Chained","Clasped","Cobbled","Craggy","Crimson","Cupped","Domed","Drawn","Dusty","Dyed","Faded","Flaked","Flinty","Fluted","Forked","Framed","Grooved","Hefty","Hinged","Hulled","Inlaid","Lathed","Looped","Marbled","Matted","Mossy","Mottled","Nested","Oiled","Oval","Patchy","Pebbled","Pinned","Pleated","Pressed","Pronged","Rifled","Rippled","Riveted","Rolled","Roped","Rounded","Rugged","Scaled","Seamed","Shelled","Shored","Slatted","Sloped","Smudged","Spiked","Spoked","Staved","Strapped","Striated","Sunlit","Supple","Thatched","Tiled","Torqued","Tubular","Tufted","Welted","Whorled","Wiry","Wooden"
+];
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generate() {
+  const container = document.getElementById('results');
+  const placeholder = document.getElementById('placeholder');
+  if (placeholder) placeholder.remove();
+
+  container.innerHTML = '';
+
+  const combos = [];
+  for (let i = 0; i < 5; i++) {
+    combos.push(pick(descriptors) + ' ' + pick(nouns));
+  }
+
+  combos.forEach((name, i) => {
+    const div = document.createElement('div');
+    div.className = 'result-item';
+    div.innerHTML = `<span class="result-num">${i + 1}.</span><span class="result-name">${name}</span>`;
+    container.appendChild(div);
+    setTimeout(() => div.classList.add('show'), i * 100);
+  });
+}
+
+// Generate floating stars
+const starsEl = document.getElementById('stars');
+const colors = ['#ff0080','#ff8c00','#ffe100','#00e676','#00b0ff','#e040fb','#ff4500','#69ff47'];
+for (let i = 0; i < 60; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.cssText = `
+    left: ${Math.random()*100}%;
+    top: ${Math.random()*100}%;
+    background: ${colors[Math.floor(Math.random()*colors.length)]};
+    --d: ${2 + Math.random()*4}s;
+    animation-delay: ${Math.random()*4}s;
+    width: ${3 + Math.random()*6}px;
+    height: ${3 + Math.random()*6}px;
+    box-shadow: 0 0 6px currentColor;
+  `;
+  starsEl.appendChild(s);
+}
+</script>
+</body>
+</html>
